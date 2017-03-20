@@ -10,21 +10,24 @@ import microsoft.exchange.webservices.data.credential.WebCredentials;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Mail {
     //private static Logger logger = LoggerFactory.getLogger(Mail.class);
 
-    public static boolean sendEmail(String title, String receve, String cc, String body) {
+    public static boolean sendEmail(String title, String receive, String cc, String body, String user, String passwd, String domin) {
 
         Boolean flag = false;
         try {
             ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2010_SP1); // your server version
-            ExchangeCredentials credentials = new WebCredentials("","",""); // change them to your email username, password, email domain
+            ExchangeCredentials credentials = new WebCredentials(user,passwd,domin); // change them to your email username, password, email domain
             service.setCredentials(credentials);
             service.setUrl(new URI("https://ex2010.elong.cn/EWS/Exchange.asmx"));
             EmailMessage msg = new EmailMessage(service);
             msg.setSubject(title); //email subject
             msg.setBody(MessageBody.getMessageBodyFromText(body)); //email body
-            msg.getToRecipients().add(receve); //email receiver
+            msg.getToRecipients().add(receive); //email receiver
             if (!cc.equals("")){
                 msg.getCcRecipients().add(cc);
             }
@@ -41,10 +44,14 @@ public class Mail {
 
     }
     public static void main(String args[]){
-        if (args.length == 4){
-            sendEmail(args[0], args[1], args[2], args[3]);
+        MyProperties myProps = new MyProperties();
+        if (myProps.getTitle() == null || myProps.getTitle().equals("DailyReport")){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            Date now = new Date();
+            String title = simpleDateFormat.format(now) + "日报";
+            sendEmail(title, myProps.getReceive(), myProps.getCc(), myProps.getBodyString(), myProps.getUser(), myProps.getPasswd(), myProps.getDomin());
         }else {
-            System.out.println("参数错误! ");
+            sendEmail(myProps.getTitle(), myProps.getReceive(), myProps.getCc(), myProps.getBodyString(), myProps.getUser(), myProps.getPasswd(), myProps.getDomin());
         }
     }
 
