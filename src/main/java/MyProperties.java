@@ -13,6 +13,7 @@ public class MyProperties {
     private String bodyFile;
     private String receive;
     private String cc;
+    private String htmlString;
 
     @SuppressWarnings("Since15")
     public MyProperties() {
@@ -113,5 +114,13 @@ public class MyProperties {
 
     public void setCc(String cc) {
         this.cc = cc;
+    }
+
+    public String getHtmlString() {
+        return htmlString;
+    }
+
+    public void setHtmlString(String htmlString) {
+        this.htmlString = htmlString;
     }
 }

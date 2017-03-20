@@ -1,6 +1,7 @@
 /**
  * Created by niuxianghui on 17/3/19.
  */
+import com.github.rjeschke.txtmark.Processor;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
@@ -45,6 +46,10 @@ public class Mail {
     }
     public static void main(String args[]){
         MyProperties myProps = new MyProperties();
+//        if (myProps.getBodyString() != null){
+//            String htmlString =  Processor.process(myProps.getBodyString());
+//            myProps.setHtmlString(htmlString);
+//        }
         if (myProps.getTitle() == null || myProps.getTitle().equals("DailyReport")){
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
             Date now = new Date();

@@ -1,1 +1,165 @@
-this is body context.
+##Hi:
+***
+####我最近学习的内容：
+
+######毕设
+*  之前把解析json的逻辑都放到前端了，导致逻辑和组件布局混在一起，所以就把解析json放到后台用java写了，但是代码写得不是很优雅。
+* 进一步完善了功能，完成了把实例按比例展示到页面上。
+
+######遇到的问题
+* 前端和后端分离的设计在调试时容易遇到**CORS**跨域访问问题，目前采用浏览器安装插件的方式解决，项目部署后应该不会再出现这个问题。
+* 在写JAVA时还是不能熟悉地使用SpringBoot框架，需要在练习中进一步学习。
+* React的开发过程中会遇到一些概念和语法问题。
+
+####周一计划：
+
+* 完善后台的功能，比如把IDC3的实例归属到IDC2中。
+* 完成设置权限的功能。
+* 继续学习JAVA。
+
+####笔记：
+
+* 跨域访问解决办法
+>The easy way is to just add the extension in google chrome to allow access using CORS.[https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en-US](https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en-US)Just enable this extension whenever you want allow access to no **'access-control-allow-origin'** header request.**Or**In Windows, paste this command in **run** windowchrome.exe --user-data-dir="C:/Chrome dev session" --disable-web-security
+this will open a new **chrome** browser which allow access to no **'access-control-allow-origin'** header request.
+
+* fastjson使用方法
+
+maven中央仓库: [http://central.maven.org/maven2/com/alibaba/fastjson/](http://central.maven.org/maven2/com/alibaba/fastjson/)
+Sourceforge.net : [https://sourceforge.net/projects/fastjson/files/](https://sourceforge.net/projects/fastjson/files/)
+在maven中如何配置fastjson依赖 fastjson最新版本都会发布到maven中央仓库，你可以直接依赖。
+
+```
+<dependency>
+     <groupId>com.alibaba</groupId>
+     <artifactId>fastjson</artifactId>
+     <version>1.2.21</version>
+</dependency>
+```
+```
+<dependency>
+     <groupId>com.alibaba</groupId>
+     <artifactId>fastjson</artifactId>
+     <version>1.1.55.android</version>
+</dependency>
+```
+
+常用接口
+```
+package com.alibaba.fastjson;
+public abstract class JSON {
+      public static final String toJSONString(Object object);
+      public static final <T> T parseObject(String text, Class<T> clazz, Feature... features);
+}
+```
+序列化：
+
+```
+String jsonString = JSON.toJSONString(obj);
+
+```
+反序列化：
+```
+VO vo = JSON.parseObject("...", VO.class);
+```
+
+范型序列化：
+```
+import com.alibaba.fastjson.TypeReference;
+
+List<VO> list = JSON.parseObject("...", new TypeReference<List<VO>>() {});
+```
+
+##Demo
+
+序列化：
+```
+import com.alibaba.fastjson.JSON;
+
+Group group = new Group();
+group.setId(0L);
+group.setName("admin");
+
+User guestUser = new User();
+guestUser.setId(2L);
+guestUser.setName("guest");
+
+User rootUser = new User();
+rootUser.setId(3L);
+rootUser.setName("root");
+
+group.addUser(guestUser);
+group.addUser(rootUser);
+
+String jsonString = JSON.toJSONString(group);
+
+System.out.println(jsonString);
+```
+
+反序列化：
+```
+String jsonString = ...;
+Group group = JSON.parseObject(jsonString, Group.class);
+```
+Group.java
+```
+public class Group {
+
+    private Long       id;
+    private String     name;
+    private List<User> users = new ArrayList<User>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+        public void addUser(User user) {
+            users.add(user);
+        }
+}
+```
+
+User.java
+```
+public class User {
+
+    private Long   id;
+    private String name;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
